@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course helper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="popup">
+    <header class="brand">
+      <div class="brand-mark" aria-hidden="true">Q</div>
+      <div>
+        <h1>Course helper</h1>
+        <p>QUIZ TO GEMINI</p>
+      </div>
+    </header>
+
+    <section class="settings-card primary-setting">
+      <div class="setting-copy">
+        <span class="setting-title">Course helper</span>
+        <span class="setting-description">Find quizzes and check results</span>
+      </div>
+      <button id="helper-toggle" class="switch" type="button" role="switch" aria-checked="false" aria-label="Turn course helper on or off">
+        <span></span>
+      </button>
+    </section>
+
+    <section class="skip-section" aria-labelledby="skip-heading">
+      <h2 id="skip-heading">AUTO-SKIP</h2>
+      <div class="settings-card setting-row">
+        <div class="setting-copy">
+          <span class="setting-title">Labs</span>
+          <span class="setting-description">Go to the next course item</span>
+        </div>
+        <button id="labs-toggle" class="switch" type="button" role="switch" aria-checked="true" aria-label="Auto-skip labs">
+          <span></span>
+        </button>
+      </div>
+      <div class="settings-card setting-row">
+        <div class="setting-copy">
+          <span class="setting-title">Video lectures</span>
+          <span class="setting-description">Go to the next course item</span>
+        </div>
+        <button id="videos-toggle" class="switch" type="button" role="switch" aria-checked="true" aria-label="Auto-skip video lectures">
+          <span></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="status-card" id="status-card" data-state="neutral" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <p id="status">Turn on the helper to begin.</p>
+    </section>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

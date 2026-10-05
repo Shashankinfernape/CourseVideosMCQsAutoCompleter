@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Quiz to Gemini",
+  "version": "1.0.0",
+  "description": "Watch a quiz page, collect multiple-choice questions, and send them to Gemini.",
+  "permissions": ["activeTab", "tabs", "clipboardWrite", "storage", "<all_urls>"],
+  "browser_action": {
+    "default_title": "Quiz to Gemini",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "applications": {
+    "gecko": {
+      "id": "quiz-to-google@example.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}

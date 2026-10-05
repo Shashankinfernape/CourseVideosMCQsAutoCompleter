@@ -1,35 +1,23 @@
 # Quiz to Gemini (Firefox)
 
-A temporary Firefox extension for extracting Google Skills-style multiple-choice quizzes, asking Gemini for answers, and applying the returned options to the page.
+A small Firefox extension that watches the current page for multiple-choice questions. When it finds them, it extracts the question text and option labels, copies the formatted prompt, opens Gemini, and tries to fill and submit its message box:
+
+> Give me answers for these questions in this format: Just give me the question option numbers in sequential order without using question numbers, just present it like 1 2 3 4 5.
 
 ## Install temporarily
 
 1. Open `about:debugging#/runtime/this-firefox` in Firefox.
 2. Choose **Load Temporary Add-on…**.
 3. Select this folder's `manifest.json`.
-4. Open the course page and turn on **Course helper**. Use the **Auto-skip Labs** and **Auto-skip Video lectures** switches to choose which course activities to skip.
+4. Open the course page and switch **Course helper** on. Use the **Auto-skip** switches to choose whether labs and video lectures should be skipped.
 
-Turn **Course helper** off to stop monitoring. Browser-internal pages cannot be inspected.
+Turn **Course helper** off to stop it. While active, it can skip detected lab and video activities with their Next control and continue across page navigations until it detects a quiz. Quizzes from the same course tab continue in the same Gemini conversation. Browser-internal pages cannot be inspected.
 
-## Quiz handling
+## Current scope
 
-The scanner looks for a visible quiz section and extracts questions and choices from radio buttons, checkboxes, ARIA controls, and nearby question text. It follows open shadow roots and watches for dynamic page updates. If the page's numbered-question count exceeds the extracted count, it waits rather than sending an incomplete list. Image-only or canvas-only questions are not readable by this version.
+The scanner looks for a visible quiz section, then gathers question containers from radio inputs, ARIA radio groups, or nearby question text. It follows open shadow roots and observes dynamic page updates. Image-only or canvas-only questions are not readable by this version.
 
-Each extracted question is tagged `SQ.n` for a single-answer radio question or `MQ.n` for a multiple-answer checkbox question. The Gemini prompt asks it to return one line per question with the same tag, for example:
+After copying the preprompt and questions, it opens Gemini, fills and submits the prompt, then watches for a plain numeric answer line matching the quiz length. It copies that line, returns to the quiz tab, selects the options, and submits the attempt. It reports the score and the page's passing threshold. A score at or above the threshold clicks Next; a score below the threshold is recorded and retaken in the same Gemini conversation with the missed question text. The extension stops for manual review if it cannot detect a matching answer, score, missed questions, or page controls. Gemini may require you to sign in or may not be available in your region.
 
-```text
-SQ.1: 2
-MQ.2: 1,3
-SQ.3: 4
-```
-
-The extension checks the answer count and tag against each question before selecting anything. It selects one option for `SQ` questions and all returned options for `MQ` questions, then submits the attempt.
-
-After submission, it compares the score with that quiz page's displayed passing score. A passing or already-completed quiz advances with **Next**. If the attempt fails, it records questions identified as incorrect and requests corrected answers for the retake in the same Gemini conversation. It stops for manual review when it cannot confidently match the questions, answers, score, or page controls.
-
-## Course activity skipping
-
-With the corresponding switches on, the helper skips detected lab and video activities using **Next**. For video pages where **Next** is unavailable, it looks for **Mark as completed**, clicks it, and continues checking for **Next**. It checks visible page content and open shadow roots for quiz, lab, and video controls.
-
-Gemini may require sign-in or may not be available in your region.
+The extension background console logs the exact normalized prompt and its character count for comparing the copied text with a manual prompt.
 
